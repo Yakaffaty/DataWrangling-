@@ -79,15 +79,22 @@ for(file in files){
 #//////////////////////////////// TOTAL DE VENTAS /////////////////////////////////////////
 ##-------------------------------- Prodcuto Mas Vendido _______________________________
 library(dplyr)
+library(ggplot2)
+library(scales)
 
 prod_ventas = select(table,DESCRIPCION,UNI,VENTA,ACABADO)
-demo2 <- mutate(prod_ventas, 
+prod_ventas <- mutate(prod_ventas, 
                 PrecioUnitario = VENTA/UNI)                     
-demo2 = group_by(demo2, DESCRIPCION,ACABADO)
-#///////////// Resumen de Venta por Prodcuto ///////////////////////////777
-Resumen <- summarize(demo2, PRODUCTO=length(DESCRIPCION),
+prod_ventas = group_by(prod_ventas, DESCRIPCION,ACABADO)
+Resumen <- summarize(prod_ventas, PRODUCTO=length(DESCRIPCION),
                      TOTAL_VENTA = sum(VENTA, na.rm = TRUE))
 Resumen = arrange(Resumen,desc(TOTAL_VENTA))
+
+ggplot(data = head(Resumen,10),
+       aes(x = DESCRIPCION, y= TOTAL_VENTA, TOTAL_VENTA))+ coord_flip() +
+       geom_bar(aes(colour = TOTAL_VENTA), stat = "identity")  +
+       scale_fill_gradient(low = "mediumblue", high = "aquamarine2")
+
 
 
 
