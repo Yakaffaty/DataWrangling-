@@ -97,6 +97,18 @@ ggplot(data = head(Resumen,10),
 
 
 
+# -------------------------------- Ventas por Dia ---------------------------
 
 
+
+ventasxdia = select(table,FECHA,DESCRIPCION,UNI,VENTA,ACABADO )
+ventasxdia = group_by(ventasxdia,FECHA)
+Resumenxdia <- summarize(ventasxdia, VENTASDELDIA= length(FECHA),
+                         VENTAPORDIA = sum(VENTA, na.rm = TRUE))
+Resumenxdia = arrange(Resumenxdia, desc(VENTAPORDIA))
+
+ggplot(data = Resumenxdia,
+       aes(x = FECHA, y= VENTAPORDIA, VENTAPORDIA))+ coord_flip() +
+  geom_bar(aes(colour = VENTAPORDIA), stat = "identity")  +
+  scale_fill_gradient(low = "mediumblue", high = "aquamarine2")
 
